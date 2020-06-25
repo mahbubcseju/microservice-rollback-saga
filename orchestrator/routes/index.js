@@ -8,8 +8,12 @@ router.get("/", function (req, res) {
   });
 });
 
-router.post("/order/item", controllList.orderItem);
+router.post("/order/item/", controllList.orderItem);
 
-router.post("/increase/value", controllList.increaseValue);
+router.get("/get/all/orders", controllList.getAllOrder);
+
+router.post("/increase/user/balance", controllList.increaseBalance);
+
+router.get("/get/user/balance/:email", controllList.getUserBalance);
 
 module.exports = router;

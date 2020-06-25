@@ -9,6 +9,6 @@ router.get("/", function (req, res) {
 });
 
 
-router.get("/getAllOrders", controllList.getAllOrders);
+router.get("/get/all/orders", controllList.getAllOrders);
 
 module.exports = router;

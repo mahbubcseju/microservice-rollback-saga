@@ -27,6 +27,6 @@ let apiRoutes = require("./routes");
 app.use("/", apiRoutes);
 
 app.listen(port);
-setInterval(service, 10000);
+setInterval(service, 1000);
 
 console.log('RESTful API server started on: ' + port);

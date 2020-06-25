@@ -21,6 +21,7 @@ var params = {
 
 exports.getAllOrders = async (req, res) => {
     Items.find({}, function(err, response){
+        console.log(response);
         res.send(response);
     })
 };

@@ -24,17 +24,22 @@ var params = {
 
 
 const addOrder = async (data) => {
+    console.log(data);
     Items.create({
-        orderId: data.Id.StringValue,
-        name: data.name.StringValue,
-        value: data.count.StringValue
+        id: data.id,
+        name: data.name,
+        count: data.count
     }, function(err, response){
-        console.log('Item created');
+        if(err){
+            console.log(err);
+        }else {
+            console.log('Item created');
+        }
     });
 }
 
 const deleteOrder = async (data) => {
-    Items.deleteOne({ orderId: data.Id.StringValue }, function(err){
+    Items.deleteOne({ orderId: data.id }, function(err){
         if(err)console.log(err);
         else {
             console.log('Successfully deleted');
@@ -48,11 +53,12 @@ module.exports = async () => {
         let data = await sqs.receiveMessage(params).promise();
         while(data.Messages != undefined){
             data.Messages.forEach( message => {
-                if ( message.Body == "add") {
-                    addOrder(message.MessageAttributes);
+                const parseData = JSON.parse(message.Body);
+                if ( parseData .topics === "addOrder") {
+                    addOrder(parseData );
                 }
                 else {
-                    deleteOrder(message.MessageAttributes);
+                    deleteOrder(parseData );
                 }
                 var deleteParams = {
                     QueueUrl: queueURL,

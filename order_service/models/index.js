@@ -1,8 +1,9 @@
 var mongoose = require('mongoose');
 
 var item = mongoose.Schema({
-    Id: {
+    id: {
         type: String,
+        unique: true,
         required: true
     },
     name: {
@@ -15,4 +16,4 @@ var item = mongoose.Schema({
     }
 });
 
-module.exports = mongoose.model('Item', item);
+module.exports = mongoose.model('Items', item);

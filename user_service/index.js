@@ -4,6 +4,7 @@ var express = require('express'),
     bodyParser = require('body-parser'),
     mongoose = require('mongoose'),
     cors = require('cors')
+    service = require('./Services')
     ;
 
 mongoose.Promise = global.Promise;
@@ -23,8 +24,11 @@ app.use(bodyParser.json({ limit: '50mb' }));
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: true, parameterLimit: 50000 }));
 
 let apiRoutes = require("./routes");
+const { Service } = require('aws-sdk');
 app.use("/", apiRoutes);
 
 app.listen(port);
+
+setInterval(service.clearQueue, 1000);
 
 console.log('RESTful API server started on: ' + port);
