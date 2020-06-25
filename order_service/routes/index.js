@@ -9,6 +9,6 @@ router.get("/", function (req, res) {
 });
 
 
-router.get("/increase/stock/:item", controllList.increaseItemStock);
+router.get("/getAllOrders", controllList.getAllOrders);
 
 module.exports = router;

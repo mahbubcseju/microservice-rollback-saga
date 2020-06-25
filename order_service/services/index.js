@@ -1,10 +1,12 @@
 const config = require('../../const');
 const AWS = require('aws-sdk');
 const service = require('../services');
-const Items = require('../models')
-const sqs = new AWS.SQS({apiVersion: '2012-11-05'});
+const Items = require('../models');
+const { increase } = require('../../user_service/Services');
 
 AWS.config.update({region: 'ap-northeast-1'});
+const sqs = new AWS.SQS({apiVersion: '2012-11-05'});
+
 var queueURL = config.ORDER_SERVICE;
 
 var params = {
@@ -21,41 +23,36 @@ var params = {
 };
 
 
-const decrease = async (data) => {
-    let entry = await Items.find({email: data.name.StringValue});
-    if (entry.length)　{
-        Items.findOneAndUpdate({
-            name: data.name.StringValue
-        },{ 
-            $inc : { 
-                value: - parseInt(data.count.StringValue)
-            }
-        },{ 
-            new: true 
-        },
-        function(err, response ){
-            console.log(response);
-        });
-    }else {
-        Items.create({
-            email: data.name.StringValue,
-            value: data.count.StringValue
-        }, function(err, response){
-            console.log('User created');
-        });
-    }
+const addOrder = async (data) => {
+    Items.create({
+        orderId: data.Id.StringValue,
+        name: data.name.StringValue,
+        value: data.count.StringValue
+    }, function(err, response){
+        console.log('Item created');
+    });
 }
 
-exports.clearQueue = async () => {
+const deleteOrder = async (data) => {
+    Items.deleteOne({ orderId: data.Id.StringValue }, function(err){
+        if(err)console.log(err);
+        else {
+            console.log('Successfully deleted');
+        }
+    });
+}
+
+module.exports = async () => {
+    console.log("Long Polling!!!")
     try {
         let data = await sqs.receiveMessage(params).promise();
         while(data.Messages != undefined){
             data.Messages.forEach( message => {
-                if ( message.Body == "Increase") {
-                    
+                if ( message.Body == "add") {
+                    addOrder(message.MessageAttributes);
                 }
                 else {
-                    decrease(message.MessageAttributes);
+                    deleteOrder(message.MessageAttributes);
                 }
                 var deleteParams = {
                     QueueUrl: queueURL,

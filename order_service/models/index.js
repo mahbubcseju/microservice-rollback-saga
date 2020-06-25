@@ -1,9 +1,12 @@
 var mongoose = require('mongoose');
 
 var item = mongoose.Schema({
+    Id: {
+        type: String,
+        required: true
+    },
     name: {
       type: String,
-      unique: true,
       required: true
     },
     count : {

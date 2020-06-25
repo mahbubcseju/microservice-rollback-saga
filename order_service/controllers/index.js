@@ -19,27 +19,8 @@ var params = {
     WaitTimeSeconds: 0
 };
 
-exports.increaseItemStock = async (req, res) => {
-    let entry = await Items.find({name: data.name.StringValue});
-    if (entry.length)　{
-        Items.findOneAndUpdate({
-            name: data.name.StringValue
-        },{ 
-            $inc : { 
-                count: parseInt(data.count.StringValue)
-            }
-        },{ 
-            new: true 
-        },
-        function(err, response ){
-            console.log(response);
-        });
-    }else {
-        Items.create({
-            name: data.name.StringValue,
-            count: data.count.StringValue
-        }, function(err, response){
-            console.log('User created');
-        });
-    }
+exports.getAllOrders = async (req, res) => {
+    Items.find({}, function(err, response){
+        res.send(response);
+    })
 };

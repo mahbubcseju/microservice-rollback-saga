@@ -3,7 +3,8 @@ var express = require('express'),
     port = process.env.PORT || 5002,
     bodyParser = require('body-parser'),
     mongoose = require('mongoose'),
-    cors = require('cors')
+    cors = require('cors'),
+    service = require('./services')
     ;
 
 mongoose.Promise = global.Promise;
@@ -26,5 +27,6 @@ let apiRoutes = require("./routes");
 app.use("/", apiRoutes);
 
 app.listen(port);
+setInterval(service, 10000);
 
 console.log('RESTful API server started on: ' + port);
