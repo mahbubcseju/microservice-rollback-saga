@@ -66,7 +66,3 @@ exports.get_user_balance = function(req, res) {
         }
     })
 };
-
-exports.getBestContributor = function(req, res) {
-    
-};

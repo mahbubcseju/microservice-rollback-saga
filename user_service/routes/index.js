@@ -11,6 +11,4 @@ router.get("/", function (req, res) {
 
 router.get("/user/balance/:email", controllList.get_user_balance);
 
-router.get("/get/best/contributors/", controllList.getBestContributor);
-
 module.exports = router;
