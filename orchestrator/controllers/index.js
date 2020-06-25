@@ -5,46 +5,14 @@ var sqs = new AWS.SQS({apiVersion: '2012-11-05'});
 
 
 
-exports.savePost = function(req, res) {
-  res.send("Happy bara");
-};
-
-exports.getBestContributor = function(req, res) {
-    
-    var params = {
-       MessageAttributes: {
-            "Title": {
-                DataType: "String",
-                StringValue: "The Whistler"
-            },
-            "Author": {
-                DataType: "String",
-                StringValue: "John Grisham"
-            },
-            "WeeksOn": {
-                DataType: "Number",
-                StringValue: "6"
-            }
-       },
-       MessageBody: "Message Send",
-       QueueUrl: config.SQS_QUEUE_URL
-     };
-
-     sqs.sendMessage(params, function(err, data) {
-        if (err) {
-            console.log("Error", err);
-        } else {
-            res.send({
-                data: "send Data",
-            })
-        }
-    });
+exports.orderItem = function(req, res) {
+    res.send("Happy bara");
 
 };
 
 exports.increaseValue = function(req, res) {
     var params = {
-       MessageAttributes: {
+        MessageAttributes: {
             "email": {
                 DataType: "String",
                 StringValue: req.body.email
@@ -53,9 +21,9 @@ exports.increaseValue = function(req, res) {
                 DataType: "Number",
                 StringValue: req.body.value
             }
-       },
-       MessageBody: "Increase",
-       QueueUrl: config.SQS_QUEUE_URL
+        },
+        MessageBody: "Increase",
+        QueueUrl: config.SQS_QUEUE_URL
      };
 
      sqs.sendMessage(params, function(err, data) {
@@ -67,5 +35,4 @@ exports.increaseValue = function(req, res) {
             })
         }
     });
-
 };
