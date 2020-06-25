@@ -4,10 +4,8 @@ AWS.config.update({region: 'ap-northeast-1'});
 var sqs = new AWS.SQS({apiVersion: '2012-11-05'});
 
 
-
 exports.orderItem = function(req, res) {
-    res.send("Happy bara");
-
+    
 };
 
 exports.increaseValue = function(req, res) {

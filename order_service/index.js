@@ -1,13 +1,13 @@
 var express = require('express'),
     app = express(),
-    port = process.env.PORT || 5001,
+    port = process.env.PORT || 5002,
     bodyParser = require('body-parser'),
     mongoose = require('mongoose'),
     cors = require('cors')
     ;
 
 mongoose.Promise = global.Promise;
-mongoose.connect('mongodb://localhost/MicroServiceUser',
+mongoose.connect('mongodb://localhost/MicroServiceOrder',
     {
         useNewUrlParser: true
     }).then(() => {

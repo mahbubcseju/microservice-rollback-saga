@@ -1,12 +1,11 @@
 const config = require('../../const');
-var AWS = require('aws-sdk');
+const AWS = require('aws-sdk');
 const service = require('../services');
+const Items = require('../models')
+const sqs = new AWS.SQS({apiVersion: '2012-11-05'});
+
 AWS.config.update({region: 'ap-northeast-1'});
-const User = require('../models')
-
-var sqs = new AWS.SQS({apiVersion: '2012-11-05'});
-
-var queueURL = config.USER_SERVICE;
+var queueURL = config.ORDER_SERVICE;
 
 var params = {
     AttributeNames: [
@@ -21,16 +20,42 @@ var params = {
     WaitTimeSeconds: 0
 };
 
-const clearQueue = async () => {
+
+const decrease = async (data) => {
+    let entry = await Items.find({email: data.name.StringValue});
+    if (entry.length)　{
+        Items.findOneAndUpdate({
+            name: data.name.StringValue
+        },{ 
+            $inc : { 
+                value: - parseInt(data.count.StringValue)
+            }
+        },{ 
+            new: true 
+        },
+        function(err, response ){
+            console.log(response);
+        });
+    }else {
+        Items.create({
+            email: data.name.StringValue,
+            value: data.count.StringValue
+        }, function(err, response){
+            console.log('User created');
+        });
+    }
+}
+
+exports.clearQueue = async () => {
     try {
         let data = await sqs.receiveMessage(params).promise();
         while(data.Messages != undefined){
             data.Messages.forEach( message => {
                 if ( message.Body == "Increase") {
-                    service.increase(message.MessageAttributes);
+                    
                 }
                 else {
-
+                    decrease(message.MessageAttributes);
                 }
                 var deleteParams = {
                     QueueUrl: queueURL,
@@ -51,18 +76,3 @@ const clearQueue = async () => {
         console.log(err);
     }
 }
-
-exports.get_user_balance = function(req, res) {
-    clearQueue();
-    User.findOne({email: req.params.email }, function(err, response) {
-        if(err) {
-            res.status(500).send({
-                'Error': 'Server Error'
-            });
-        }else {
-            res.send({
-                'data': response.value
-            })
-        }
-    })
-};
