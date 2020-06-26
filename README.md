@@ -59,10 +59,11 @@
 -> To make an order
 
 ```
-   http://localhost:5000/increase/user/balance
+   http://localhost:5000/order/item
    Request: POST
    Form Data: {
                   email: mahbuburrahman2111@gmail.com,
+                  productName: mango
                   value: 1000
               }
 ```
