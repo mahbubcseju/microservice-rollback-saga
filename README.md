@@ -8,6 +8,9 @@
 
 ##### Make the environements ready:
 
+###### Create two message queue in aws aqs and set in const.js
+
+
 ###### Run orchestrator service's Server
 
 ```
