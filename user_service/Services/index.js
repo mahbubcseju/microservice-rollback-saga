@@ -23,8 +23,24 @@ const params = {
 };
 
 
+const sendMessageToOrder = (data) => {
+    data.topics = "cancelOrder";
+    var params = {
+        MessageBody: JSON.stringify(data),
+        QueueUrl: config.ORDER_SERVICE
+     };
+     sqs.sendMessage(params, function(err, data) {
+        if (err) {
+            console.log("Error", err);
+        } else {
+            console.log("Success");
+        }
+    });
+}
+
 const increaseBalance = async (data) => {
     let entry = await User.find({email: data.email});
+    console.log(entry);
     if (entry.length)　{
         User.findOneAndUpdate({
             email: data.email
@@ -49,9 +65,9 @@ const increaseBalance = async (data) => {
 }
 
 const decreaseBalance = async (data) => {
-    console.log(data);
-    let entry = await User.find({email: data.email});
-    if (entry.length)　{
+    let entry = await User.findOne({email: data.email});
+    console.log(entry);
+    if (entry && entry.value >= parseInt(data.value))　{
         User.findOneAndUpdate({
             email: data.email
         },{ 
@@ -65,12 +81,7 @@ const decreaseBalance = async (data) => {
             console.log(response);
         });
     }else {
-        User.create({
-            email: data.email,
-            value: data.value
-        }, function(err, response){
-            console.log('User created');
-        });
+        sendMessageToOrder(data);
     }
 }
 
@@ -105,3 +116,4 @@ exports.clearQueue  = async () => {
         console.log(err);
     }
 }
+

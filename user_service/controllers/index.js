@@ -8,10 +8,15 @@ exports.get_user_balance = function(req, res) {
             res.status(500).send({
                 'Error': 'Server Error'
             });
-        }else {
+        }else if (response){
             res.send({
                 'data': response.value
             })
+        }else {
+            res.send({
+                'Message': 'User not found',
+            })
         }
+
     })
 };

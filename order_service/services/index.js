@@ -39,10 +39,10 @@ const addOrder = async (data) => {
 }
 
 const deleteOrder = async (data) => {
-    Items.deleteOne({ orderId: data.id }, function(err){
+    Items.deleteOne({ id: data.id }, function(err){
         if(err)console.log(err);
         else {
-            console.log('Successfully deleted');
+            console.log('Successfully deleted', data.id);
         }
     });
 }
